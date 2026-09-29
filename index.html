@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>المهمة السرية 🇸🇦</title>
+<style>
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:linear-gradient(#dff5e7,#fff7e8);color:#173b2b}
+.game{max-width:720px;margin:auto;padding:20px}
+.card{background:white;border-radius:24px;padding:24px;box-shadow:0 8px 30px #0002;margin:12px 0}
+h1{text-align:center;color:#176b45}
+.flag{font-size:56px;text-align:center;animation:wave 1.5s infinite alternate}
+@keyframes wave{to{transform:rotate(-3deg) scale(1.04)}}
+.girls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:16px 0}
+.girl{padding:9px 13px;border-radius:18px;background:#f9d7e5;font-weight:bold}
+.question{font-size:20px;font-weight:bold;line-height:1.7}
+.answers{display:grid;gap:10px;margin-top:16px}
+button{border:0;border-radius:15px;padding:14px;font-size:17px;cursor:pointer;background:#f1c6d8}
+button:hover{filter:brightness(.97)}
+.feedback{text-align:center;font-weight:bold;min-height:28px;margin:12px}
+.next{background:#176b45;color:white;width:100%;display:none}
+.score{text-align:center;font-weight:bold}
+.small{text-align:center;color:#65776d}
+</style>
+</head>
+<body>
+<main class="game">
+  <div class="card">
+    <div class="flag">🇸🇦</div>
+    <h1>المهمة السرية</h1>
+    <p class="small">ساعدي همس ولمار وريتال وسما والبنت الخامسة على فتح الصندوق واكتشاف سر الوطن!</p>
+    <div class="girls">
+      <span class="girl">همس</span><span class="girl">لمار ٢</span><span class="girl">ريتال</span><span class="girl">سما</span><span class="girl">لمار ٥</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="score" id="score">النقاط: 0 / 5</div>
+    <div class="question" id="question"></div>
+    <div class="answers" id="answers"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next" id="next">اللغز التالي ➜</button>
+  </div>
+</main>
+
+<script>
+const qs=[
+ {q:"وجدت البنات رسالة تقول: «ابحثن عن الشيء الذي يحكي قصة وطن». ما الدليل الأول؟",
+  a:["العلم السعودي 🇸🇦","كرة","لعبة"],c:0},
+ {q:"على الصندوق كُتب: «ثلاثة أشياء تفتح الطريق». أي مجموعة صحيحة؟",
+  a:["علم، معرفة، عمل","مال، ذهب، جوهرة","لعب، نوم، سفر"],c:0},
+ {q:"أي شيء يمثل حب الوطن بطريقة عملية؟",
+  a:["المحافظة عليه والاجتهاد","إهمال المدرسة","رمي النفايات"],c:0},
+ {q:"ماذا وجدت البنات داخل الصندوق؟",
+  a:["كتابًا ورسالة وصورة عن الوطن","حلوى فقط","ألعابًا"],c:0},
+ {q:"ما الكنز الحقيقي في نهاية القصة؟",
+  a:["بناء مستقبل الوطن بالعلم والعمل","الصندوق نفسه","مفتاح ذهبي"],c:0}
+];
+let i=0,score=0,answered=false;
+const q=document.getElementById("question"), answers=document.getElementById("answers"),
+fb=document.getElementById("feedback"), next=document.getElementById("next"), sc=document.getElementById("score");
+
+function render(){
+ answered=false; next.style.display="none"; fb.textContent="";
+ sc.textContent=`النقاط: ${score} / 5`;
+ q.textContent=qs[i].q; answers.innerHTML="";
+ qs[i].a.forEach((x,n)=>{
+   const b=document.createElement("button"); b.textContent=x;
+   b.addEventListener("click",()=>choose(n,b)); answers.appendChild(b);
+ });
+}
+function choose(n,b){
+ if(answered)return; answered=true;
+ [...answers.children].forEach(x=>x.disabled=true);
+ if(n===qs[i].c){score++;fb.textContent="أحسنتِ! ✨ إجابة صحيحة";}else fb.textContent="قريبة! 🌷 حاولي تذكّر القصة.";
+ sc.textContent=`النقاط: ${score} / 5`;
+ next.style.display="block";
+}
+next.addEventListener("click",()=>{
+ i++;
+ if(i<qs.length) render();
+ else{
+   q.textContent=`انتهت المهمة! 🎉 حصلتِ على ${score} من 5`;
+   answers.innerHTML="";
+   fb.textContent=score===5?"فتحتن الصندوق واكتشفتن السر: وطننا نبنيه بالعلم والعمل 🇸🇦💚":"مهمة جميلة! أعيدي اللعب وحاولي جمع 5 نقاط.";
+   next.style.display="none";
+ }
+});
+render();
+</script>
+</body>
+</html>
